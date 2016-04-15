@@ -7,33 +7,33 @@ if(!file.exists("UCI HAR Dataset")){unzip("getdata_dataset.zip")}
 
 # Reading labels
 activities <- read.table("UCI HAR Dataset/activity_labels.txt")
-features <- read.table("UCI HAR Dataset/features.txt")
+allfeatures <- read.table("UCI HAR Dataset/features.txt")
 activities[,2] <- as.character(activities[,2])
-features[,2] <- as.character(features[,2])
+allfeatures[,2] <- as.character(features[,2])
 
 # 2. Extracts only the measurements on the mean and standard deviation for
 # each measurement.
-featuresWanted <- grep(".*mean.*|.*std.*", features[,2])
+features <- grep(".*mean.*|.*std.*", allfeatures[,2])
 
 # 0. Read separate datasets
 # 1. Merges the training and the test sets to create one data set.
 # 4. Appropriately labels the data set with descriptive variable names.
-train <- read.table("UCI HAR Dataset/train/X_train.txt")[featuresWanted]
-test <- read.table("UCI HAR Dataset/test/X_test.txt")[featuresWanted]
-trainSubjects <- read.table("UCI HAR Dataset/train/subject_train.txt")
-testSubjects <- read.table("UCI HAR Dataset/test/subject_test.txt")
-trainActivities <- read.table("UCI HAR Dataset/train/Y_train.txt")
-testActivities <- read.table("UCI HAR Dataset/test/Y_test.txt")
-train <- cbind(trainSubjects, trainActivities, train)
-test <- cbind(testSubjects, testActivities, test)
+train <- read.table("UCI HAR Dataset/train/X_train.txt")[features]
+test <- read.table("UCI HAR Dataset/test/X_test.txt")[features]
+trainSbj <- read.table("UCI HAR Dataset/train/subject_train.txt")
+testSbj <- read.table("UCI HAR Dataset/test/subject_test.txt")
+trainAct <- read.table("UCI HAR Dataset/train/Y_train.txt")
+testAct <- read.table("UCI HAR Dataset/test/Y_test.txt")
+train <- cbind(trainSbj, trainAct, train)
+test <- cbind(testSbj, testAct, test)
 merged <- rbind(train, test)
 
 # 3. Uses descriptive activity names to name the activities in the data set
-featuresWantedNames <- features[featuresWanted,2]
-featuresWantedNames <- gsub('-mean', 'Mean', featuresWantedNames)
-featuresWantedNames <- gsub('-std', 'Std', featuresWantedNames)
-featuresWantedNames <- gsub('[-()]', '', featuresWantedNames)
-colnames(merged) <- c("subject", "activity", featuresWantedNames)
+featuresVals <- allfeatures[features,2]
+featuresVals <- gsub('-mean', 'Mean', featuresVals)
+featuresVals <- gsub('-std', 'Std', featuresVals)
+featuresVals <- gsub('[-()]', '', featuresVals)
+colnames(merged) <- c("subject", "activity", featuresVals)
 merged$activity <- factor(merged$activity, levels = activities[,1], labels = activities[,2])
 merged$subject <- as.factor(merged$subject)
 
