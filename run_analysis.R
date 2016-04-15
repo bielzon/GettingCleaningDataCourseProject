@@ -8,7 +8,7 @@ if(!file.exists("UCI HAR Dataset")){unzip("getdata_dataset.zip")}
 # Reading labels
 activities <- read.table("UCI HAR Dataset/activity_labels.txt")
 features <- read.table("UCI HAR Dataset/features.txt")
-activities <- as.character(activities[,2])
+activities[,2] <- as.character(activities[,2])
 features[,2] <- as.character(features[,2])
 
 # 2. Extracts only the measurements on the mean and standard deviation for
